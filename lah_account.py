@@ -8,15 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import convertSQLToDict
 
 # Create engine object to manage connections to DB, and scoped session to separate user interactions with DB
-engine = create_engine(
-    os.getenv("DATABASE_URL"),
-    pool_size=20,
-    max_overflow=0,
-    pool_recycle=3600,
-    pool_timeout=30,
-    pool_pre_ping=True,
-    pool_use_lifo=True,
-)
+engine = create_engine(os.getenv("DATABASE_URL"),)
 db = scoped_session(sessionmaker(bind=engine))
 
 
@@ -68,7 +60,6 @@ def getPayers(userID):
     payers = convertSQLToDict(results)
 
     return payers
-
 
 
 # Add a payer to the users account
@@ -166,8 +157,7 @@ def payerExistsForUser(payerName, userID):
         return True
 
     # Query the DB
-    count = db.execute(text(
-        "SELECT COUNT(*) AS count FROM payers WHERE user_id = :usersID AND LOWER(name) = :name"), {"usersID": userID, "name": payerName.lower()}).fetchone()[0]
+    count = db.execute(text("SELECT COUNT(*) AS count FROM payers WHERE user_id = :usersID AND LOWER(name) = :name"), {"usersID": userID, "name": payerName.lower()}).fetchone()[0]
 
     if count > 0:
         return True

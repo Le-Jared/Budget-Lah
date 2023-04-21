@@ -15,12 +15,12 @@
     {% elif addPayer != None %}
       <div class="alert alert-dismissible alert-success">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Nice!</strong> You added '<strong>{{ addPayer }}</strong>' as a payer 👍.
+        <strong>Nice!</strong> You added '<strong>{{ addPayer }}</strong>' as a payer.
       </div>
     {% elif renamedPayer != None %}
       <div class="alert alert-dismissible alert-success">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Cya later {{ renamedPayer[0] }} 👋</strong> You renamed '<strong>{{ renamedPayer[0] }}</strong>' to '<strong>{{ renamedPayer[1] }}</strong>'.
+        <strong>Cya later {{ renamedPayer[0] }} </strong> You renamed '<strong>{{ renamedPayer[0] }}</strong>' to '<strong>{{ renamedPayer[1] }}</strong>'.
       </div>
     {% elif deletedPayer != None %}
       <div class="alert alert-dismissible alert-danger">
@@ -30,7 +30,7 @@
     {% elif updatedPassword != None %}
       <div class="alert alert-dismissible alert-success">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Congrats 🎉</strong> You have <strong>updated your password</strong>.
+        <strong>Congrats</strong> You have <strong>updated your password</strong>.
       </div>
     {% endif %}
     <div class="row">
@@ -57,7 +57,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Payers</h5>
-            <p>Add your partner / roommates to track expenses together 🤝</p>
+            <p>Add your partner / roommates to track expenses together</p>
             <a class="btn btn-primary" data-toggle="collapse" href="#collapsePayer" role="button" id="btnAddPayer" aria-expanded="false" aria-controls="collapsePayer">Add Payer</a>
             {% if payers %}
             <a class="btn btn-primary" data-toggle="collapse" href="#collapsePayers" role="button" id="btnManagePayers" aria-expanded="false" aria-controls="collapsePayers">Manage Payers</a>
@@ -98,7 +98,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Password</h5>
-            <p>Update your password 🔐</p>
+            <p>Update your password</p>
             <p><a class="btn btn-primary" data-toggle="collapse" href="#collapsePassword" role="button" aria-expanded="false" aria-controls="collapsePassword">Change Password</a></p>
           </div>
           <div class="collapse" id="collapsePassword">
