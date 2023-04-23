@@ -1,6 +1,5 @@
 import os
-import calendar
-
+import pandas as pd
 from flask import request, session
 from flask_session import Session
 from sqlalchemy import create_engine, text
@@ -9,7 +8,15 @@ from datetime import datetime
 from helpers import convertSQLToDict
 
 # Create engine object to manage connections to DB, and scoped session to separate user interactions with DB
-engine = create_engine(os.getenv("DATABASE_URL"),)
+engine = create_engine(
+    os.getenv("DATABASE_URL"),
+    pool_size=20,
+    max_overflow=0,
+    pool_recycle=3600,
+    pool_timeout=30,
+    pool_pre_ping=True,
+    pool_use_lifo=True,
+)
 db = scoped_session(sessionmaker(bind=engine))
 
 
@@ -51,14 +58,11 @@ def addExpenses(formData, userID):
                 # Add dictionary to list
                 expenses.append(expense.copy())
 
-    # Insert expenses into DB
-    for expense in expenses:
-        now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
-        db.execute(text("INSERT INTO expenses (description, category, expenseDate, amount, payer, submitTime, user_id) VALUES (:description, :category, :expenseDate, :amount, :payer, :submitTime, :usersID)"),
-                   {"description": expense["description"], "category": expense["category"], "expenseDate": expense["date"], "amount": expense["amount"], "payer": expense["payer"], "submitTime": now, "usersID": userID})
-    db.commit()
+    # Insert expenses into DB using the new addExpensesList function
+    addExpensesList(expenses, userID)
 
     return expenses
+
 
 
 # Get and return the users lifetime expense history
@@ -87,8 +91,9 @@ def getExpense(formData, userID):
         expense["amount"].replace("$", "").replace(",", ""))
 
     # Query the DB for the expense unique identifier
-    expenseID = db.execute(text("SELECT id FROM expenses WHERE user_id = :usersID AND description = :oldDescription AND category = :oldCategory AND expenseDate = :oldDate AND amount = :oldAmount AND payer = :oldPayer AND submitTime = :oldSubmitTime"),
-                           {"usersID": userID, "oldDescription": expense["description"], "oldCategory": expense["category"], "oldDate": expense["date"], "oldAmount": expense["amount"], "oldPayer": expense["payer"], "oldSubmitTime": expense["submitTime"]}).fetchone()
+    expenseID = db.execute(text("SELECT id FROM expenses WHERE user_id = :usersID AND description = :oldDescription AND category = :oldCategory AND expenseDate = :oldDate AND amount = :oldAmount AND payer = :oldPayer"),
+                       {"usersID": userID, "oldDescription": expense["description"], "oldCategory": expense["category"], "oldDate": expense["date"], "oldAmount": expense["amount"], "oldPayer": expense["payer"]}).fetchone()
+
 
     # Make sure a record was found for the expense otherwise set as None
     if expenseID:
@@ -97,6 +102,7 @@ def getExpense(formData, userID):
         expense["id"] = None
 
     return expense
+
 
 
 # Delete an existing expense record for the user
@@ -148,3 +154,70 @@ def updateExpense(oldExpense, formData, userID):
         return expenses
     else:
         return None
+
+
+
+def addExpensesList(expenses, userID, return_ids=False):
+    expense_ids = []
+    count = 0
+    
+    # Insert expenses into DB
+    for expense in expenses:
+        now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+        result = db.execute(text("INSERT INTO expenses (description, category, expenseDate, amount, payer, submitTime, user_id) VALUES (:description, :category, :expenseDate, :amount, :payer, :submitTime, :usersID) RETURNING id"),
+                            {"description": expense["description"], "category": expense["category"], "expenseDate": expense["date"], "amount": expense["amount"], "payer": expense["payer"], "submitTime": now, "usersID": userID})
+        expense_id = result.fetchone()[0]
+        expense_ids.append(expense_id)
+        count += 1
+
+    db.commit()
+    
+    return expense_ids
+
+
+def importExpensesFromFile(file, userID):
+    expenses = []
+
+    # Read the file (CSV or XLS) into a DataFrame
+    file_extension = file.split('.')[-1].lower()
+    if file_extension == 'xls':
+        df = pd.read_excel(file, engine='xlrd', skiprows=9, header=None)
+    elif file_extension == 'xlsx':
+        df = pd.read_excel(file, engine='openpyxl', skiprows=9, header=None)
+    else:
+        raise ValueError(f"Unsupported file format: {file_extension}")
+
+    # Get the current time to use as submitTime for all imported expenses
+    now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+
+    # Iterate over the DataFrame rows and create the expenses list
+    for index, row in df.iterrows():
+        if index == 0:
+            continue
+
+        # Check if the row is blank (all elements are NaN) and break the loop if it is
+        if row.isna().all():
+            break
+
+        if not pd.isna(row[0]):  # Check if the row has a transaction date (skip summary rows)
+            description = row[2].split("SINGAPORE")[0].strip()
+
+            expense = {"description": description,
+                       "category": "Other",
+                       "date": datetime.strptime(row[0], "%d %b %Y").strftime("%Y-%m-%d"),  # Convert date to string format
+                       "amount": float(row[6]),
+                       "payer": "Self"}
+
+            expenses.append(expense)
+
+    # Use the existing addExpensesList function to add the expenses to the database
+    expense_ids = addExpensesList(expenses, userID)
+
+    return expense_ids
+
+
+
+
+
+
+
