@@ -1,28 +1,29 @@
 import os
-import json
-import requests
-import copy
-import calendar
+import pathlib
 import lah_dashboard
 import lah_expenses
 import lah_budgets
 import lah_categories
 import lah_reports
 import lah_account
+import requests 
 
-from flask import Flask, jsonify, redirect, render_template, request, session
+from flask import Flask, redirect, render_template, request, session, url_for, flash, abort
 from flask_session import Session
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 from datetime import datetime
 from flask_wtf.csrf import CSRFProtect
+from pip._vendor import cachecontrol
 from helpers import apology, login_required, sgd
 from google.oauth2 import id_token
-from google.auth.transport import requests
+from pip._vendor import cachecontrol
 from google_auth_oauthlib.flow import Flow
+import google.auth.transport.requests
 
 
 # Configure application
@@ -909,6 +910,36 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
+
+ALLOWED_EXTENSIONS = {'csv', 'xls', 'xlsx'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/uploadxls', methods=['POST'])
+def upload_file():
+    if 'xlsFile' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+
+    file = request.files['xlsFile']
+
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(request.url)
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join("uploads", filename))  # Save the file to a folder named "uploads"
+        
+        # Get the user ID from the session
+        userID = session["user_id"]
+
+        added_expenses_count = lah_expenses.importExpensesFromFile(os.path.join("uploads", filename), userID)
+        flash(f'Successfully imported {added_expenses_count} expense(s) from the file.')
+
+    # Redirect to the expense history page
+    return redirect(url_for('expensehistory'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
