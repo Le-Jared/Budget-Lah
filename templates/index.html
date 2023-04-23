@@ -13,7 +13,7 @@ Home
 
 <!-- Begin Quick Expense -->
 <button type="button" class="btn btn-outline-primary btn-block btn-lg" data-toggle="modal"
-    data-target="#quickExpenseModal"> Swift Expense </button>
+    data-target="#quickExpenseModal">Swift Expense</button>
 
 <div class="modal fade" id="quickExpenseModal" tabindex="-1" role="dialog" aria-labelledby="quickExpenseModalLabel"
     aria-hidden="true">
@@ -323,35 +323,35 @@ Home
 
 {% if budgets %}
 <script>
-    var budgetData = JSON.stringify({{ budgets | tojson }});
+    let budgetData = JSON.stringify({{ budgets | tojson }});
     loadBudgetData(budgetData);
 </script>
 {% endif %}
 
 {% if spending_week %}
 <script>
-    var weeklyData = JSON.stringify({{ spending_week | tojson }});
+    let weeklyData = JSON.stringify({{ spending_week | tojson }});
     loadWeeklySpendingData(weeklyData);
 </script>
 {% endif %}
 
 {% if spending_month %}
 <script>
-    var monthlyData = JSON.stringify({{ spending_month | tojson }});
+    let monthlyData = JSON.stringify({{ spending_month | tojson }});
     loadMonthlySpendingData(monthlyData);
 </script>
 {% endif %}
 
 {% if spending_trends %}
 <script>
-    var trendsData = JSON.stringify({{ spending_trends | tojson }});
+    let trendsData = JSON.stringify({{ spending_trends | tojson }});
     loadTrendsData(trendsData);
 </script>
 {% endif %}
 
 {% if payersChart %}
 <script>
-    var payersData = JSON.stringify({{ payersChart | tojson }});
+    let payersData = JSON.stringify({{ payersChart | tojson }});
     loadPayersData(payersData);
 </script>
 {% endif %}

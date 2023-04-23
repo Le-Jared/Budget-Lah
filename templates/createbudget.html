@@ -12,7 +12,7 @@ Create Budget
 
 {% if (income - budgeted) <= 0 %} <div class="alert alert-success">
     <h4 class="alert-heading">Congrats!</h4>
-    <p class="mb-0">All of your income is currently budgeted for. Good job</p>
+    <p class="mb-0">All of your income is currently budgeted for.</p>
     </div>
     {% else %}
     <form action="/createbudget" id="createBudgetForm" method="post" autocomplete="off">

@@ -30,7 +30,7 @@
     {% elif updatedPassword != None %}
       <div class="alert alert-dismissible alert-success">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Congrats</strong> You have <strong>updated your password</strong>.
+        <strong>Congrats 🎉</strong> You have <strong>updated your password</strong>.
       </div>
     {% endif %}
     <div class="row">
@@ -123,7 +123,6 @@
           <div class="card-body">
             <h5 class="card-title">Statistics</h5>
             <ul style="text-align:left">
-              <li><strong>Member since</strong>: {{ stats["registerDate"] }}</li>
               <li><strong># of expenses</strong>: {{ stats["totalExpenses"] }}</li>
               <li><strong># of budgets</strong>: {{ stats["totalBudgets"] }}</li>
               <li><strong># of spend categories</strong>: {{ stats["totalCategories"] }}</li>

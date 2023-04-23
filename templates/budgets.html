@@ -28,7 +28,7 @@ Manage Budgets
         <p>You currently have <strong>{{ (income - budgeted) | sgd}}</strong> of unbudgeted income.</p>
         <a href="/createbudget" class="btn btn-success">Create a Budget</a>
         {% else %}
-        <p>All of your income is budgeted for. Good job 👍</p>
+        <p>All of your income is budgeted for.</p>
         {% endif %}
       </div>
     </div>
@@ -57,7 +57,7 @@ Manage Budgets
         <br>
         {% endfor %}
         {% else %}
-        <p>You have not created any budgets yet 😢</p>
+        <p>You have not created any budgets yet</p>
         {% endif %}
       </div>
     </div>
@@ -105,8 +105,8 @@ Manage Budgets
     let currentYear = new Date().getFullYear();
     let selectedYear = "{{ year }}"
 
-    // Generate allowable years to select for budget (2020 thru current year)
-    for (let i = parseInt(currentYear); i >= 2020; i--) {
+    // Generate allowable years to select for budget (2023 thru current year)
+    for (let i = parseInt(currentYear); i >= 2023; i--) {
       // Create an option tag
       let option = document.createElement("option");
       option.innerHTML = i;
@@ -125,11 +125,11 @@ Manage Budgets
 <script>
   // Set the title and fields of the delete modal on load/show
   $('#deleteModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget) // Button that triggered the modal
-    var budget = button.data('budget') // Extract info from data-* attributes
-    var year = button.data('year')
-    var amount = button.data('amount')
-    var modal = $(this)
+    let button = $(event.relatedTarget) // Button that triggered the modal
+    let budget = button.data('budget') // Extract info from data-* attributes
+    let year = button.data('year')
+    let amount = button.data('amount')
+    let modal = $(this)
     modal.find('.modal-title').text("Delete budget '" + budget + "'")
     modal.find('#delete').val(budget)
     modal.find('#amountAlert').text(amount + " of your " + year + " income will no longer be budgeted for")

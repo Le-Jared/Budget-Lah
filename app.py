@@ -7,6 +7,7 @@ import lah_dashboard
 import lah_expenses
 import lah_budgets
 import lah_categories
+import lah_reports
 import lah_account
 
 from flask import Flask, jsonify, redirect, render_template, request, session
@@ -230,9 +231,11 @@ def index():
         spending_trends = lah_dashboard.getSpendingTrends(
             session["user_id"])
 
+        # Get payer spending for the user
+        payersChart = lah_reports.generatePayersReport(session["user_id"])
 
         return render_template("index.html", categories=categories, payers=payers, date=date, income=income, expenses_year=expenses_year, expenses_month=expenses_month, expenses_week=expenses_week, expenses_last5=expenses_last5,
-                               budgets=budgets, spending_week=spending_week, spending_month=spending_month, spending_trends=spending_trends)
+                               budgets=budgets, spending_week=spending_week, spending_month=spending_month, spending_trends=spending_trends, payersChart=payersChart)
 
     # User reached route via POST
     else:
@@ -673,6 +676,100 @@ def categories():
 
         return render_template("categories.html", categories=categoriesWithBudgets, newCategory=None, renamedCategory=None, deleteCategory=None)
 
+
+@app.route("/reports", methods=["GET"])
+@login_required
+def reports():
+    """View reports"""
+
+    return render_template("reports.html")
+
+
+@app.route("/budgetsreport", methods=["GET"])
+@app.route("/budgetsreport/<int:year>", methods=["GET"])
+@login_required
+def budgetsreport(year=None):
+    """View year-to-date spending by category report"""
+
+    # Make sure the year from route is valid
+    if year:
+        currentYear = datetime.now().year
+        if not 2023 <= year <= currentYear:
+            return apology(f"Please select a valid budget year: 2023 through {currentYear}")
+    else:
+        # Set year to current year if it was not in the route (this will set UX to display current years budgets)
+        year = datetime.now().year
+
+    # Generate a data structure that combines the users budgets and the expenses that have categories which match budgets
+    budgets = lah_reports.generateBudgetsReport(session["user_id"], year)
+
+    return render_template("budgetsreport.html", budgets=budgets, year=year)
+
+
+@app.route("/monthlyreport", methods=["GET"])
+@app.route("/monthlyreport/<int:year>", methods=["GET"])
+@login_required
+def monthlyreport(year=None):
+    """View monthly spending report"""
+
+    # Make sure the year from route is valid
+    if year:
+        currentYear = datetime.now().year
+        if not 2023 <= year <= currentYear:
+            return apology(f"Please select a valid budget year: 2023 through {currentYear}")
+    else:
+        # Set year to current year if it was not in the route (this will set UX to display current years report)
+        year = datetime.now().year
+
+    # Generate a data structure that combines the users monthly spending data needed for chart and table
+    monthlySpending = lah_reports.generateMonthlyReport(
+        session["user_id"], year)
+
+    return render_template("monthlyreport.html", monthlySpending=monthlySpending, year=year)
+
+
+@app.route("/spendingreport", methods=["GET"])
+@app.route("/spendingreport/<int:year>", methods=["GET"])
+@login_required
+def spendingreport(year=None):
+    """View spending categories report"""
+
+    # Make sure the year from route is valid
+    if year:
+        currentYear = datetime.now().year
+        if not 2023 <= year <= currentYear:
+            return apology(f"Please select a valid budget year: 2023 through {currentYear}")
+    else:
+        # Set year to current year if it was not in the route (this will set UX to display current years report)
+        year = datetime.now().year
+
+    # Generate a data structure that combines the users all-time spending data for chart and table
+    spendingReport = lah_reports.generateSpendingTrendsReport(
+        session["user_id"], year)
+
+    return render_template("spendingreport.html", spending_trends_chart=spendingReport["chart"], spending_trends_table=spendingReport["table"], categories=spendingReport["categories"], year=year)
+
+
+@app.route("/payersreport", methods=["GET"])
+@app.route("/payersreport/<int:year>", methods=["GET"])
+@login_required
+def payersreport(year=None):
+    """View payers spending report"""
+
+    # Make sure the year from route is valid
+    if year:
+        currentYear = datetime.now().year
+        if not 2023 <= year <= currentYear:
+            return apology(f"Please select a valid budget year: 2023 through {currentYear}")
+    else:
+        # Set year to current year if it was not in the route (this will set UX to display current years report)
+        year = datetime.now().year
+
+    # Generate a data structure that combines the users payers and expense data for chart and table
+    payersReport = lah_reports.generatePayersReport(
+        session["user_id"], year)
+
+    return render_template("payersreport.html", payers=payersReport, year=year)
 
 
 @app.route("/account", methods=["GET", "POST"])
