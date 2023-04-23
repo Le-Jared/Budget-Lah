@@ -21,7 +21,6 @@ importlib-metadata==6.3.0
 itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.2
-numpy==1.24.2
 oauthlib==2.1.0
 openpyxl==3.1.2
 pandas==2.0.0
