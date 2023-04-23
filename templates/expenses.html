@@ -30,38 +30,37 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Upload Expenses</h5>
-                <p>Upload DBS Bank Statements</p>
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadCsvModal">Upload File</button>
+                <p>Upload UOB Credit Card Statements</p>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#uploadXlsModal">Upload File</button>
             </div>
         </div>
     </div>
     
-    <!-- Upload CSV Modal -->
-    <div class="modal fade" id="uploadCsvModal" tabindex="-1" role="dialog" aria-labelledby="uploadCsvModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="uploadCsvModalLabel">Upload CSV Bank Statements</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="/upload" id="uploadCsv" method="post" enctype="multipart/form-data" autocomplete="off">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                        <div class="form-group">
-                            <label for="csvFile" class="col-form-label">Select Bank CSV File:</label>
-                            <input type="file" class="form-control-file" name="csvFile" id="csvFile" accept=".csv" form="uploadCsv" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" form="uploadCsv">Upload</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
+    <!-- Upload xls Modal -->
+    <div class="modal fade" id="uploadXlsModal" tabindex="-1" role="dialog" aria-labelledby="uploadXlsModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="uploadXlsModalLabel">Upload UOB Credit Card Statements</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="/uploadxls" id="uploadxls" method="post" enctype="multipart/form-data" autocomplete="off">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+              <div class="form-group">
+                <label for="xlsFile" class="col-form-label">Select .xls:</label>
+                <input type="file" class="form-control-file" name="xlsFile" id="xlsFile" accept=".xls, .xlsx" form="uploadxls" required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success" form="uploadxls">Upload</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
         </div>
-    </div>
-    
+      </div>
+    </div>    
+
 {% endblock %}
