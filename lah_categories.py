@@ -131,7 +131,7 @@ def getCategoryID(categoryName, userID=None):
         if not categoryID:
             return None
         else:
-            return categoryID["id"]
+            return categoryID[0]  # Use integer index to access the ID value
 
     # Otherwise search the users selection of categories
     else:
@@ -141,7 +141,7 @@ def getCategoryID(categoryName, userID=None):
         if not categoryID:
             return None
         else:
-            return categoryID["id"]
+            return categoryID[0]  # Use integer index to access the ID value
 
 
 # Checks if the category name exists in the users seleciton of categories (usercategories table) - if so, just return as False?
