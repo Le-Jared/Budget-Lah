@@ -76,3 +76,37 @@ main img
     padding-bottom: 0.5rem;
     padding-left: 0.2rem;
 }
+
+/*Button*/
+.btn-success {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-success:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+.btn-success:focus, .btn-success.focus {
+    background-color: #0069d9;
+    border-color: #0062cc;
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+}
+
+.btn-success:not(:disabled):not(.disabled):active,
+.btn-success:not(:disabled):not(.disabled).active,
+.show > .btn-success.dropdown-toggle {
+    background-color: #0062cc;
+    border-color: #005cbf;
+}
+
+.btn-success:not(:disabled):not(.disabled):active:focus,
+.btn-success:not(:disabled):not(.disabled):active.focus,
+.btn-success:not(:disabled):not(.disabled).active:focus,
+.btn-success:not(:disabled):not(.disabled):active:hover,
+.btn-success:not(:disabled):not(.disabled).active:hover,
+.show > .btn-success.dropdown-toggle:hover {
+    background-color: #005cbf;
+    border-color: #0056b3;
+}
