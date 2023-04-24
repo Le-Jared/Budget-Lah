@@ -22,8 +22,6 @@ def getUsername(userID):
     else:
         return None
 
-
-
 # Get the users total income
 def getIncome(userID):
     try:

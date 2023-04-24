@@ -43,7 +43,6 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-
 # Configure session to use filesystem (instead of signed cookies)
 # app.config["SESSION_FILE_DIR"] = mkdtemp() # only remove comment when testing locally for benefit of temp directories
 app.config["SESSION_PERMANENT"] = False
@@ -52,6 +51,7 @@ Session(app)
 
 # Custom filter
 app.jinja_env.filters["sgd"] = sgd
+
 # Enable CSRF protection globally for the Flask app
 csrf = CSRFProtect(app)
 
@@ -70,8 +70,6 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    """Register user"""
-
     # User reached route via POST
     if request.method == "POST":
         # Query DB for all existing user names and make sure new username isn't already taken
@@ -115,8 +113,6 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    """Log user in"""
-
     # Forget any user_id
     session.clear()
 
@@ -161,12 +157,8 @@ def login():
         return render_template("login.html")
 
 
-
-
 @app.route("/logout")
 def logout():
-    """Log user out"""
-
     # Forget any user_id
     session.clear()
 
@@ -177,8 +169,6 @@ def logout():
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    """Show dashboard of budget/expenses"""
-
     # User reached route via GET
     if request.method == "GET":
 
@@ -256,16 +246,12 @@ def index():
 @app.route("/expenses", methods=["GET"])
 @login_required
 def expenses():
-    """Manage expenses"""
-
     return render_template("expenses.html")
 
 
 @app.route("/addexpenses", methods=["GET", "POST"])
 @login_required
 def addexpenses():
-    """Add new expense(s)"""
-
     # User reached route via POST
     if request.method == "POST":
         # Get all of the expenses provided from the HTML form
@@ -297,8 +283,6 @@ def addexpenses():
 @app.route("/expensehistory", methods=["GET", "POST"])
 @login_required
 def expensehistory():
-    """Show history of expenses or let the user update existing expense"""
-
     # User reached route via GET
     if request.method == "GET":
         # Get all of the users expense history ordered by submission time
@@ -326,8 +310,7 @@ def expensehistory():
             return apology("Try again!")
 
         # Get the existing expense record ID from the DB and build a data structure to store old expense details
-        oldExpense = lah_expenses.getExpense(
-            request.form, session["user_id"])
+        oldExpense = lah_expenses.getExpense(request.form, session["user_id"])
 
         # Make sure an existing record was found otherwise render an error message
         if oldExpense["id"] == None:
@@ -365,8 +348,6 @@ def expensehistory():
 @app.route("/budgets/<int:year>", methods=["GET"])
 @login_required
 def budgets(year=None):
-    """Manage budgets"""
-
     # Make sure the year from route is valid
     if year:
         currentYear = datetime.now().year
@@ -415,8 +396,6 @@ def budgets(year=None):
 @app.route("/createbudget", methods=["GET", "POST"])
 @login_required
 def createbudget():
-    """Create a budget"""
-
     # User reached route via POST
     if request.method == "POST":
         # Make sure user has no more than 20 budgets (note: 20 is an arbitrary value)
@@ -465,8 +444,6 @@ def createbudget():
 @app.route("/updatebudget/<urlvar_budgetname>", methods=["GET", "POST"])
 @login_required
 def updatebudget(urlvar_budgetname):
-    """Update a budget"""
-
     # User reached route via POST
     if request.method == "POST":
         # Get all of the budget info provided from the HTML form
@@ -519,8 +496,6 @@ def updatebudget(urlvar_budgetname):
 @app.route("/categories", methods=["GET", "POST"])
 @login_required
 def categories():
-    """Manage spending categories"""
-
     # User reached route via POST
     if request.method == "POST":
 
@@ -681,8 +656,6 @@ def categories():
 @app.route("/reports", methods=["GET"])
 @login_required
 def reports():
-    """View reports"""
-
     return render_template("reports.html")
 
 
@@ -690,8 +663,6 @@ def reports():
 @app.route("/budgetsreport/<int:year>", methods=["GET"])
 @login_required
 def budgetsreport(year=None):
-    """View year-to-date spending by category report"""
-
     # Make sure the year from route is valid
     if year:
         currentYear = datetime.now().year
@@ -711,8 +682,6 @@ def budgetsreport(year=None):
 @app.route("/monthlyreport/<int:year>", methods=["GET"])
 @login_required
 def monthlyreport(year=None):
-    """View monthly spending report"""
-
     # Make sure the year from route is valid
     if year:
         currentYear = datetime.now().year
@@ -733,8 +702,6 @@ def monthlyreport(year=None):
 @app.route("/spendingreport/<int:year>", methods=["GET"])
 @login_required
 def spendingreport(year=None):
-    """View spending categories report"""
-
     # Make sure the year from route is valid
     if year:
         currentYear = datetime.now().year
@@ -755,8 +722,6 @@ def spendingreport(year=None):
 @app.route("/payersreport/<int:year>", methods=["GET"])
 @login_required
 def payersreport(year=None):
-    """View payers spending report"""
-
     # Make sure the year from route is valid
     if year:
         currentYear = datetime.now().year
@@ -776,8 +741,6 @@ def payersreport(year=None):
 @app.route("/account", methods=["GET", "POST"])
 @login_required
 def updateaccount():
-    """Update users account"""
-
     # User reached route via POST
     if request.method == "POST":
 
@@ -901,7 +864,6 @@ def updateaccount():
 
 # Handle errors by rendering apology
 def errorhandler(e):
-    """Handle error"""
     if not isinstance(e, HTTPException):
         e = InternalServerError()
     return apology(e.name, e.code)
