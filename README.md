@@ -32,18 +32,6 @@ https://budget-lah.onrender.com
 ## Users' Stories
 
 
-| :-------- |:------------|:---------|:---------
-| User | to login/register/logout | Authentication (Security)/POST Request | Done
-| User | to have a form to fill in registration/login details | Registration/Login Form (Security)/POST Request | Done
-| User | to see medicine products extracted from backend database for sale on the online store | GET Request through Stripe API | Not completed
-| Pharmacist | to see/add/edit/delete medicine stored within the database of the company | POST/PUT/DELETE Requests | Done
-| Pharmacist | to search for a specific medicine to update details | GET Request | Done
-| Pharmacist | to edit stock quantity on the available medicines stored within the database of the company | PUT Requests | Done
-| Pharmacist | to see the stock quantity of a deleted medicine to be automatically deleted from the inventory | DELETE Request | Done
-| Pharmacist | to see a dashboard of sales analytics |GET Request | Not completed
-| Developer | to have authentication and authorisation for accessing specific pages | Authorisation & Authentication | Done
-| Developer | to have validation on View, Model and Controller | Input Validation to prevent noSQL/SQL Injections | Done
-| Developer | to have unit testing with Mocha and Chai | Ease of Troubleshooting | Not completed
 
 # **Development Timeline and Approach**
 
