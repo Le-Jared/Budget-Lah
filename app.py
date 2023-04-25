@@ -19,7 +19,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from flask_wtf.csrf import CSRFProtect
 from pip._vendor import cachecontrol
-from helpers import apology, login_required, sgd
+from components import apology, login_required, sgd
 from google.oauth2 import id_token
 from pip._vendor import cachecontrol
 from google_auth_oauthlib.flow import Flow

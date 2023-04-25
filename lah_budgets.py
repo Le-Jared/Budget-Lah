@@ -7,7 +7,7 @@ from flask_session import Session
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from datetime import datetime
-from helpers import convertSQLToDict
+from components import convertSQLToDict
 
 # Create engine object to manage connections to DB, and scoped session to separate user interactions with DB
 engine = create_engine(os.getenv("DATABASE_URL"),)

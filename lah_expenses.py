@@ -6,7 +6,7 @@ from flask_session import Session
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from datetime import datetime
-from helpers import convertSQLToDict
+from components import convertSQLToDict
 
 # Create engine object to manage connections to DB, and scoped session to separate user interactions with DB
 engine = create_engine(
@@ -44,7 +44,6 @@ def addExpenses(formData, userID):
     else:
         counter = 0
         for key, value in formData:
-            # Keys are numbered by default in HTML form. Remove those numbers so we can use the HTML element names as keys for the dictionary.
             cleanKey = key.split(".")
 
             # Add to dictionary
