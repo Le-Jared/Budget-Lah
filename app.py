@@ -32,6 +32,8 @@ app = Flask(__name__)
 # Set app key
 app.secret_key = os.getenv("SECRET_KEY")
 
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
@@ -67,6 +69,75 @@ engine = create_engine(
 )
 db = scoped_session(sessionmaker(bind=engine))
 
+# Set up the Google OAuth2 client
+GOOGLE_CLIENT_ID = "495675858702-3nnj7rb14ba2c4nru81b8e7ttuqce1h7.apps.googleusercontent.com"
+client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
+
+flow = Flow.from_client_secrets_file(
+    client_secrets_file=client_secrets_file,
+    scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
+    redirect_uri="http://127.0.0.1:5000/callback"
+)
+
+@app.route("/google-login")
+def google_login():
+    authorization_url, state = flow.authorization_url()
+    session["state"] = state
+    return redirect(authorization_url)
+
+@app.route("/callback")
+def callback():
+    flow.fetch_token(authorization_response=request.url)
+
+    if not session["state"] == request.args["state"]:
+        abort(500)  # State does not match!
+
+    credentials = flow.credentials
+    request_session = requests.session()
+    cached_session = cachecontrol.CacheControl(request_session)
+    token_request = google.auth.transport.requests.Request(session=cached_session)
+
+    id_info = id_token.verify_oauth2_token(
+        id_token=credentials._id_token,
+        request=token_request,
+        audience=GOOGLE_CLIENT_ID
+    )
+
+    user_id = id_info.get("sub")
+    user_email = id_info.get("email")
+    user_name = id_info.get("name")
+
+    # Check if the user exists in your database, if not, create a new user
+    result = db.execute(text("SELECT * FROM users WHERE google_id = :google_id"),
+                        {"google_id": user_id})
+    column_names = result.keys()
+    rows = [dict(zip(column_names, row)) for row in result.fetchall()]
+
+
+    if len(rows) == 0:
+        # Generate a unique username based on the user's email address
+        username_base = user_email.split('@')[0]
+        username = username_base
+        username_count = 1
+
+        while True:
+            existing_user = db.execute(text("SELECT * FROM users WHERE LOWER(username) = :username"), {"username": username.lower()}).fetchone()
+            if not existing_user:
+                break
+            username = f"{username_base}_{username_count}"
+            username_count += 1
+
+        # Create a new user in your database with the Google user information
+        now = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+        new_user_id = db.execute(text("INSERT INTO users (username, email, google_id, registerDate, lastLogin) VALUES (:username, :email, :google_id, :registerDate, :lastLogin) RETURNING id"),
+                                 {"username": username, "email": user_email, "google_id": user_id, "registerDate": now, "lastLogin": now}).fetchone()[0]
+        db.commit()
+
+        session["user_id"] = new_user_id
+    else:
+        session["user_id"] = rows[0]['id']
+
+    return redirect("/")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
