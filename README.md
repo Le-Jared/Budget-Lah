@@ -39,6 +39,11 @@ https://budget-lah.onrender.com
 
 
 ### _Entity Relationship Diagram (ERD)_
+<img width="646" alt="Screenshot 2023-04-25 at 9 44 23 AM" src="https://user-images.githubusercontent.com/68887503/234154174-f15bdb7d-f3a9-40d3-bb12-55235f6c2816.png">
+
+# **Code Snipet**
+<img width="937" alt="Screenshot 2023-04-25 at 9 57 58 AM" src="https://user-images.githubusercontent.com/68887503/234155926-7701a8ed-65c0-4fcc-a177-39e980d0bfa7.png">
+
 
 
 # **Key Takeaways**
