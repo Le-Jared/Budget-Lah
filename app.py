@@ -903,5 +903,9 @@ def upload_file():
     # Redirect to the expense history page
     return redirect(url_for('expensehistory'))
 
+@app.route("/blog")
+def blog():
+    return render_template("blog.html")
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
