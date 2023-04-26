@@ -5,17 +5,25 @@
 # **Project Description**
 This project involves elements of Create-Read-Update-Delete (CRUD) to create an account for Users to track their expenses. Create multiple budgets for yourself to track spending. 
 
-Need to input multiple expenses? Upload and scan them to put into our database. 
+Features:
+- Quick and bulk expensing
+- Budget creation and automatic tracking of expenses per budget
+- Custom spend categories
+- Dashboard with dynamic reporting
+- Detailed reports that break down spending
+- Add additional payers for tracking expenses across multiple people
+- Export your data directly into raw, CSV, and Excel
+- Responsive design - compatible with all major browsers and devices
+- Upload expenses by scanning your downloaded bank statements
+
 
 # **Timeframe**
 7 Working Days
 
 # **Deployment** 
-
 https://budget-lah.onrender.com
 
 # **Technologies Utilized**
-
 - HTML
 - CSS
 - Javascript
@@ -24,12 +32,11 @@ https://budget-lah.onrender.com
 - Flask (BackEnd)
 - PostgresSQL (Database)
 
-# **Wireframe Sketch & User Story**
-## Wireframe Sketch
+# ** User Story**
 
 
 
-## Users' Stories
+
 
 
 
