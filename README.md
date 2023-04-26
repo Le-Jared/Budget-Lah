@@ -32,7 +32,7 @@ https://budget-lah.onrender.com
 - Flask (BackEnd)
 - PostgresSQL (Database)
 
-# ** User Story**
+# User Stories
 
 
 
