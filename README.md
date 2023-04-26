@@ -16,12 +16,14 @@ Features:
 - Responsive design - compatible with all major browsers and devices
 - Upload expenses by scanning your downloaded bank statements
 - Mobile Responsive
+- Google OATH
 
 
 # **Timeframe**
 7 Working Days
 
 # **Deployment** 
+- Google OATH not Deployed yet
 https://budget-lah.onrender.com
 
 # **Technologies Utilized**
