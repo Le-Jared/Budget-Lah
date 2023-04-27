@@ -23,8 +23,7 @@ Features:
 7 Working Days
 
 # **Deployment** 
-- Google OATH not Deployed yet
-https://budget-lah.onrender.com
+- https://budget-lah.onrender.com (Google OATH not Deployed yet)
 
 # **Technologies Utilized**
 - HTML
